@@ -14,4 +14,5 @@ import java.util.List;
 public class RestaurantDto {
     private String name;
     private List<MealDto> menu;
+    private List<TableDto> tables;
 }
