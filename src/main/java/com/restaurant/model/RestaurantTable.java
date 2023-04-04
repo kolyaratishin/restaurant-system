@@ -19,7 +19,8 @@ public class RestaurantTable {
 
     private String name;
 
-    @OneToOne(mappedBy = "table", cascade = CascadeType.ALL)
+    @OneToOne(mappedBy = "table", cascade = CascadeType.ALL, orphanRemoval = true)
+    @PrimaryKeyJoinColumn
     private Receipt receipt;
 
     @ManyToOne

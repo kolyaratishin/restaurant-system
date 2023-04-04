@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 @Data
@@ -12,4 +13,5 @@ import java.util.List;
 public class ReceiptDto {
     private Long id;
     private List<MealDto> meals;
+    private BigDecimal totalPrice;
 }

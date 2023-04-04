@@ -19,7 +19,9 @@ public class ReceiptController {
     @GetMapping("/{id}")
     public ReceiptDto getReceiptById(@PathVariable(value = "id") Long id){
         Receipt receipt = receiptService.getReceiptById(id);
-        return modelMapper.map(receipt, ReceiptDto.class);
+        ReceiptDto receiptDto = modelMapper.map(receipt, ReceiptDto.class);
+        receiptDto.setTotalPrice(receipt.getTotalPrice());
+        return receiptDto;
     }
 
     @PostMapping("/{tableId}")

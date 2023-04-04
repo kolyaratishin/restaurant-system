@@ -4,7 +4,6 @@ import com.restaurant.model.Receipt;
 import com.restaurant.model.RestaurantTable;
 import com.restaurant.repository.ReceiptRepository;
 import lombok.RequiredArgsConstructor;
-import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -20,7 +19,10 @@ public class ReceiptService {
     }
 
     public void deleteById(Long id) {
-        receiptRepository.deleteById(id);
+        Receipt receiptById = getReceiptById(id);
+        receiptById.removeTable();
+        receiptById.removeAllMeals();
+        receiptRepository.delete(receiptById);
     }
 
     public Receipt getReceiptById(Long id) {
@@ -29,7 +31,8 @@ public class ReceiptService {
 
     public Receipt update(Receipt receipt, Long receiptId) {
         Receipt receiptById = getReceiptById(receiptId);
-        receiptById.setMeals(receipt.getMeals());
+        receiptById.removeAllMeals();
+        receiptById.addAllMeals(receipt.getMeals());
         return receiptRepository.save(receiptById);
     }
 }
