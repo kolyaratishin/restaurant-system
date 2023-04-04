@@ -19,6 +19,9 @@ public class RestaurantTable {
 
     private String name;
 
+    @Enumerated(EnumType.STRING)
+    private TableStatus status;
+
     @OneToOne(mappedBy = "table", cascade = CascadeType.ALL, orphanRemoval = true)
     @PrimaryKeyJoinColumn
     private Receipt receipt;

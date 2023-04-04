@@ -12,6 +12,6 @@ import java.util.List;
 @AllArgsConstructor
 public class OrderDto {
     private Long id;
-    private List<MealDto> menu;
+    private List<MealDto> meals;
     private BigDecimal totalPrice;
 }

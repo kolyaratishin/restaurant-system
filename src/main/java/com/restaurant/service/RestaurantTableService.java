@@ -1,9 +1,6 @@
 package com.restaurant.service;
 
-import com.restaurant.model.Meal;
-import com.restaurant.model.Receipt;
-import com.restaurant.model.Restaurant;
-import com.restaurant.model.RestaurantTable;
+import com.restaurant.model.*;
 import com.restaurant.repository.MealRepository;
 import com.restaurant.repository.RestaurantTableRepository;
 import lombok.RequiredArgsConstructor;
@@ -19,6 +16,7 @@ public class RestaurantTableService {
         Restaurant restaurant = restaurantService.getRestaurantById(restaurantId);
         table.setRestaurant(restaurant);
         table.createReceipt();
+        table.setStatus(TableStatus.FREE);
         return tableRepository.save(table);
     }
 
@@ -28,5 +26,11 @@ public class RestaurantTableService {
 
     public RestaurantTable getTableById(Long id){
         return tableRepository.findById(id).orElseThrow();
+    }
+
+    public RestaurantTable changeStatus(Long id, TableStatus status){
+        RestaurantTable tableById = getTableById(id);
+        tableById.setStatus(status);
+        return tableRepository.save(tableById);
     }
 }

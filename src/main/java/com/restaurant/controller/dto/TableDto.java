@@ -1,5 +1,6 @@
 package com.restaurant.controller.dto;
 
+import com.restaurant.model.TableStatus;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -10,4 +11,5 @@ import lombok.NoArgsConstructor;
 public class TableDto {
     private Long id;
     private String name;
+    private TableStatus status;
 }

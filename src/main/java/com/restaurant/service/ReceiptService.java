@@ -3,6 +3,7 @@ package com.restaurant.service;
 import com.restaurant.model.Order;
 import com.restaurant.model.Receipt;
 import com.restaurant.model.RestaurantTable;
+import com.restaurant.model.TableStatus;
 import com.restaurant.repository.ReceiptRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -45,7 +46,8 @@ public class ReceiptService {
         order.addMeals(receiptById.getMeals());
         order.setCreatedAt(LocalDateTime.now());
         Order savedOrder = orderService.save(order);
+        tableService.changeStatus(receiptById.getTable().getId(), TableStatus.FREE);
         deleteById(receiptId);
-        return order;
+        return savedOrder;
     }
 }
