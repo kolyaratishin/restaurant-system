@@ -48,4 +48,9 @@ public class Receipt {
     public void addAllMeals(List<Meal> meals){
         this.meals.addAll(meals);
     }
+
+    public void addTable(RestaurantTable table){
+        this.table = table;
+        table.setReceipt(this);
+    }
 }

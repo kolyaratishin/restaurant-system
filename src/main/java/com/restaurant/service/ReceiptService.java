@@ -14,7 +14,7 @@ public class ReceiptService {
 
     public Receipt save(Receipt receipt, Long tableId) {
         RestaurantTable tableById = tableService.getTableById(tableId);
-        receipt.setTable(tableById);
+        receipt.addTable(tableById);
         return receiptRepository.save(receipt);
     }
 
