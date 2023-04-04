@@ -23,4 +23,8 @@ public class RestaurantTableService {
     public void deleteById(Long id){
         tableRepository.deleteById(id);
     }
+
+    public RestaurantTable getTableById(Long id){
+        return tableRepository.findById(id).orElseThrow();
+    }
 }
