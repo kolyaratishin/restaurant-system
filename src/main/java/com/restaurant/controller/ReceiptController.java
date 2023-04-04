@@ -1,6 +1,8 @@
 package com.restaurant.controller;
 
+import com.restaurant.controller.dto.OrderDto;
 import com.restaurant.controller.dto.ReceiptDto;
+import com.restaurant.model.Order;
 import com.restaurant.model.Receipt;
 import com.restaurant.service.ReceiptService;
 import lombok.RequiredArgsConstructor;
@@ -24,12 +26,6 @@ public class ReceiptController {
         return receiptDto;
     }
 
-    @PostMapping("/{tableId}")
-    public ReceiptDto save(@RequestBody Receipt receipt, @PathVariable(value = "tableId") Long tableId){
-        Receipt savedReceipt = receiptService.save(receipt, tableId);
-        return modelMapper.map(savedReceipt, ReceiptDto.class);
-    }
-
     @PutMapping("/{receiptId}")
     public ReceiptDto update(@RequestBody Receipt receipt, @PathVariable(value = "receiptId") Long receiptId){
         Receipt savedReceipt = receiptService.update(receipt, receiptId);
@@ -42,7 +38,10 @@ public class ReceiptController {
     }
 
     @PostMapping("/count/{receiptId}")
-    public void countTheReceipt(@PathVariable(value = "receiptId") Long receiptId){
-        receiptService.countTheReceipt(receiptId);
+    public OrderDto countTheReceipt(@PathVariable(value = "receiptId") Long receiptId){
+        Order order = receiptService.countTheReceipt(receiptId);
+        OrderDto orderDto = modelMapper.map(order, OrderDto.class);
+        orderDto.setTotalPrice(order.getTotalPrice());
+        return orderDto;
     }
 }

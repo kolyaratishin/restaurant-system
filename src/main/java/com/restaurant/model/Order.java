@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -19,7 +20,7 @@ public class Order {
     @GeneratedValue
     private Long id;
 
-    @OneToMany
+    @ManyToMany
     private List<Meal> meals;
 
     private LocalDateTime createdAt;
@@ -27,5 +28,15 @@ public class Order {
     public void addMeals(List<Meal> meals){
         this.meals = new ArrayList<>();
         this.meals.addAll(meals);
+    }
+
+    public BigDecimal getTotalPrice(){
+        if(meals != null) {
+            return meals.stream()
+                    .map(Meal::getPrice)
+                    .reduce(BigDecimal::add)
+                    .orElse(BigDecimal.ZERO);
+        }
+        return BigDecimal.ZERO;
     }
 }

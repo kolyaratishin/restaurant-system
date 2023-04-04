@@ -26,4 +26,10 @@ public class RestaurantTable {
     @ManyToOne
     @JoinColumn(name = "restaurant_id")
     private Restaurant restaurant;
+
+    public void createReceipt(){
+        Receipt receipt = new Receipt();
+        receipt.addTable(this);
+        this.receipt = receipt;
+    }
 }

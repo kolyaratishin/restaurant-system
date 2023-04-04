@@ -24,7 +24,6 @@ public class ReceiptService {
 
     public void deleteById(Long id) {
         Receipt receiptById = getReceiptById(id);
-        receiptById.removeTable();
         receiptById.removeAllMeals();
         receiptRepository.delete(receiptById);
     }
@@ -40,12 +39,13 @@ public class ReceiptService {
         return receiptRepository.save(receiptById);
     }
 
-    public void countTheReceipt( Long receiptId) {
+    public Order countTheReceipt( Long receiptId) {
         Receipt receiptById = getReceiptById(receiptId);
         Order order = new Order();
         order.addMeals(receiptById.getMeals());
         order.setCreatedAt(LocalDateTime.now());
-        orderService.save(order);
+        Order savedOrder = orderService.save(order);
         deleteById(receiptId);
+        return order;
     }
 }

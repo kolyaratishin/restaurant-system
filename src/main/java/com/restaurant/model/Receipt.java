@@ -18,7 +18,7 @@ public class Receipt {
     @Column(name = "table_id")
     private Long id;
 
-    @OneToMany
+    @ManyToMany
     private List<Meal> meals;
 
     @OneToOne
