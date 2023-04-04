@@ -12,6 +12,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class RestaurantDto {
+    private Long id;
     private String name;
     private List<MealDto> menu;
     private List<TableDto> tables;

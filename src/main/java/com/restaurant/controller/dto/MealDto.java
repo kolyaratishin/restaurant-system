@@ -10,6 +10,7 @@ import java.math.BigDecimal;
 @NoArgsConstructor
 @AllArgsConstructor
 public class MealDto {
+    private Long id;
     private String name;
     private BigDecimal price;
 }
