@@ -40,4 +40,9 @@ public class ReceiptController {
     public void deleteById(@PathVariable(value = "id") Long id){
         receiptService.deleteById(id);
     }
+
+    @PostMapping("/count/{receiptId}")
+    public void countTheReceipt(@PathVariable(value = "receiptId") Long receiptId){
+        receiptService.countTheReceipt(receiptId);
+    }
 }

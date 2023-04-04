@@ -1,16 +1,20 @@
 package com.restaurant.service;
 
+import com.restaurant.model.Order;
 import com.restaurant.model.Receipt;
 import com.restaurant.model.RestaurantTable;
 import com.restaurant.repository.ReceiptRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+
 @Service
 @RequiredArgsConstructor
 public class ReceiptService {
     private final RestaurantTableService tableService;
     private final ReceiptRepository receiptRepository;
+    private final OrderService orderService;
 
     public Receipt save(Receipt receipt, Long tableId) {
         RestaurantTable tableById = tableService.getTableById(tableId);
@@ -34,5 +38,14 @@ public class ReceiptService {
         receiptById.removeAllMeals();
         receiptById.addAllMeals(receipt.getMeals());
         return receiptRepository.save(receiptById);
+    }
+
+    public void countTheReceipt( Long receiptId) {
+        Receipt receiptById = getReceiptById(receiptId);
+        Order order = new Order();
+        order.addMeals(receiptById.getMeals());
+        order.setCreatedAt(LocalDateTime.now());
+        orderService.save(order);
+        deleteById(receiptId);
     }
 }
