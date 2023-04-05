@@ -1,9 +1,6 @@
 package com.restaurant.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
@@ -22,9 +19,13 @@ public class Restaurant {
 
     private String name;
 
-    @OneToMany(mappedBy = "restaurant")
+    @OneToMany(mappedBy = "restaurant", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Meal> menu;
 
     @OneToMany(mappedBy = "restaurant")
     private List<RestaurantTable> tables;
+
+    public void removeAllMeals(){
+        menu.clear();
+    }
 }
