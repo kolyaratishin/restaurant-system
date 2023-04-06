@@ -1,8 +1,10 @@
 package com.restaurant.controller;
 
 import com.restaurant.controller.dto.TableDto;
+import com.restaurant.model.Restaurant;
 import com.restaurant.model.RestaurantTable;
 import com.restaurant.model.TableStatus;
+import com.restaurant.service.RestaurantService;
 import com.restaurant.service.RestaurantTableService;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -13,13 +15,19 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 public class RestaurantTableController {
     private final RestaurantTableService restaurantTableService;
+    private final RestaurantService restaurantService;
 
     private final ModelMapper modelMapper;
 
-    @PostMapping("/{restaurantId}")
-    public TableDto save(@RequestBody RestaurantTable table, @PathVariable(value = "restaurantId") Long restaurantId) {
-        RestaurantTable savedTable = restaurantTableService.save(table, restaurantId);
-        return modelMapper.map(table, TableDto.class);
+    @PostMapping
+    public TableDto save(@RequestBody TableDto tableDto) {
+        Restaurant restaurantById = restaurantService.getRestaurantById(tableDto.getRestaurantId());
+        RestaurantTable restaurantTable = modelMapper.map(tableDto, RestaurantTable.class);
+        restaurantTable.setRestaurant(restaurantById);
+        RestaurantTable savedTable = restaurantTableService.save(restaurantTable);
+        TableDto tableResponse = modelMapper.map(savedTable, TableDto.class);
+        tableResponse.setRestaurantId(savedTable.getRestaurant().getId());
+        return tableResponse;
     }
 
     @DeleteMapping("/{id}")

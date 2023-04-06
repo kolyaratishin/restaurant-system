@@ -12,4 +12,5 @@ public class TableDto {
     private Long id;
     private String name;
     private TableStatus status;
+    private Long restaurantId;
 }
