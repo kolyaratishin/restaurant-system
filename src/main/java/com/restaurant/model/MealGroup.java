@@ -25,4 +25,8 @@ public class MealGroup {
     @ManyToOne
     @JoinColumn(name = "restaurant_id")
     private Restaurant restaurant;
+
+    public void removeAllMeals(){
+        meals.clear();
+    }
 }

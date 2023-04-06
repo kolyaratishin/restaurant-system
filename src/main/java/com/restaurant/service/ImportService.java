@@ -1,6 +1,7 @@
 package com.restaurant.service;
 
 import com.restaurant.model.Meal;
+import com.restaurant.model.MealGroup;
 import com.restaurant.model.Restaurant;
 import com.restaurant.repository.MealRepository;
 import com.restaurant.service.dto.ImportMealDto;
@@ -13,13 +14,13 @@ import org.springframework.stereotype.Service;
 public class ImportService {
     private final ModelMapper modelMapper;
     private final MealRepository mealRepository;
-    private final RestaurantService restaurantService;
+    private final MealGroupService mealGroupService;
 
 
     public void storeToDatabase(ImportMealDto dto) {
         Meal meal = modelMapper.map(dto, Meal.class);
-        Restaurant restaurant = restaurantService.getRestaurantById(dto.getRestaurantId());
-        meal.setRestaurant(restaurant);
+        MealGroup mealGroupById = mealGroupService.getMealGroupById(dto.getMealGroupId());
+        meal.setMealGroup(mealGroupById);
         mealRepository.save(meal);
     }
 }

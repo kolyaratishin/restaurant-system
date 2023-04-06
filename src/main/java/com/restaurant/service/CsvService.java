@@ -1,7 +1,7 @@
 package com.restaurant.service;
 
 import com.restaurant.model.Meal;
-import com.restaurant.model.Restaurant;
+import com.restaurant.model.MealGroup;
 import com.restaurant.repository.MealRepository;
 import com.restaurant.service.dto.ImportMealDto;
 import com.univocity.parsers.common.processor.BeanListProcessor;
@@ -10,7 +10,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.*;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -26,18 +28,18 @@ public class CsvService {
 
     private final ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
     private final MealRepository mealRepository;
-    private final RestaurantService restaurantService;
+    private final MealGroupService mealGroupService;
     private final ImportService importService;
     private static final String DELIMITER = ",";
 
 
-    public String parseAndSave(MultipartFile file, Long restaurantId) {
+    public String parseAndSave(MultipartFile file, Long mealGroupId) {
         if (EXCEL_CSV_TYPE.equals(file.getContentType()) || CSV_TYPE.equals(file.getContentType())) {
             try {
                 InputStream inputStream = file.getInputStream();
-                 parser.parse(inputStream);
-                clearDatabaseFromPreviousMeals(restaurantId);
-                rowProcessor.getBeans().forEach(dto -> dto.setRestaurantId(restaurantId));
+                parser.parse(inputStream);
+                clearDatabaseFromPreviousMeals(mealGroupId);
+                rowProcessor.getBeans().forEach(dto -> dto.setMealGroupId(mealGroupId));
                 rowProcessor.getBeans().forEach(importService::storeToDatabase);
                 return "Save of file " + file.getOriginalFilename() + " was successful";
             } catch (IOException e) {
@@ -48,10 +50,10 @@ public class CsvService {
         return "INVALID_FILE_FORMAT";
     }
 
-    private void clearDatabaseFromPreviousMeals(Long restaurantId) {
-        Restaurant restaurant = restaurantService.getRestaurantById(restaurantId);
-        restaurant.removeAllMealsGroup();
-        restaurantService.save(restaurant);
+    private void clearDatabaseFromPreviousMeals(Long mealGroupId) {
+        MealGroup mealGroup = mealGroupService.getMealGroupById(mealGroupId);
+        mealGroup.removeAllMeals();
+        mealGroupService.save(mealGroup);
     }
 
     public byte[] export() {
