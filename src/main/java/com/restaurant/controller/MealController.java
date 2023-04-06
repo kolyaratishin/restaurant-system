@@ -1,7 +1,11 @@
 package com.restaurant.controller;
 
 import com.restaurant.controller.dto.MealDto;
+import com.restaurant.controller.request.MealRequest;
+import com.restaurant.controller.response.MealResponse;
 import com.restaurant.model.Meal;
+import com.restaurant.model.MealGroup;
+import com.restaurant.service.MealGroupService;
 import com.restaurant.service.MealService;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -14,14 +18,19 @@ public class MealController {
 
     private final MealService mealService;
 
+    private final MealGroupService mealGroupService;
+
     private final ModelMapper modelMapper;
     
-    @PostMapping("/{restaurantId}")
-    public MealDto save(@RequestBody Meal meal, @PathVariable(value = "restaurantId") Long restaurantId) {
-        Meal savedMeal = mealService.save(meal, restaurantId);
-        MealDto dto = modelMapper.map(meal, MealDto.class);
-        dto.setGroupName(savedMeal.getMealGroup().getName());
-        return dto;
+    @PostMapping
+    public MealResponse save(@RequestBody MealRequest mealRequest) {
+        MealGroup mealGroupById = mealGroupService.getMealGroupById(mealRequest.getMealGroupId());
+        Meal meal = modelMapper.map(mealRequest, Meal.class);
+        meal.setMealGroup(mealGroupById);
+        Meal savedMeal = mealService.save(meal);
+        MealResponse mealResponse = modelMapper.map(savedMeal, MealResponse.class);
+        mealResponse.setMealGroupId(savedMeal.getMealGroup().getId());
+        return mealResponse;
     }
 
     @DeleteMapping("/{id}")
