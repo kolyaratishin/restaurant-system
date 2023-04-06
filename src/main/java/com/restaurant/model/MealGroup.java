@@ -6,23 +6,23 @@ import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
-import java.math.BigDecimal;
+import java.util.List;
 
 @Getter
 @Setter
-@ToString
 @RequiredArgsConstructor
 @Entity
-public class Meal {
+public class MealGroup {
     @Id
     @GeneratedValue
     private Long id;
 
     private String name;
 
-    private BigDecimal price;
+    @OneToMany(mappedBy = "mealGroup", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Meal> meals;
 
     @ManyToOne
-    @JoinColumn(name = "group_id")
-    private MealGroup mealGroup;
+    @JoinColumn(name = "restaurant_id")
+    private Restaurant restaurant;
 }

@@ -1,17 +1,14 @@
-package com.restaurant.controller.dto;
+package com.restaurant.controller.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.math.BigDecimal;
-
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class MealDto {
+public class MealGroupResponse {
     private Long id;
     private String name;
-    private BigDecimal price;
-    private String groupName;
+    private Long restaurantId;
 }

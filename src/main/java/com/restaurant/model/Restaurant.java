@@ -20,12 +20,12 @@ public class Restaurant {
     private String name;
 
     @OneToMany(mappedBy = "restaurant", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Meal> menu;
+    private List<MealGroup> mealGroups;
 
     @OneToMany(mappedBy = "restaurant")
     private List<RestaurantTable> tables;
 
-    public void removeAllMeals(){
-        menu.clear();
+    public void removeAllMealsGroup(){
+        mealGroups.clear();
     }
 }

@@ -50,7 +50,7 @@ public class CsvService {
 
     private void clearDatabaseFromPreviousMeals(Long restaurantId) {
         Restaurant restaurant = restaurantService.getRestaurantById(restaurantId);
-        restaurant.removeAllMeals();
+        restaurant.removeAllMealsGroup();
         restaurantService.save(restaurant);
     }
 

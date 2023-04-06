@@ -19,7 +19,9 @@ public class MealController {
     @PostMapping("/{restaurantId}")
     public MealDto save(@RequestBody Meal meal, @PathVariable(value = "restaurantId") Long restaurantId) {
         Meal savedMeal = mealService.save(meal, restaurantId);
-        return modelMapper.map(meal, MealDto.class);
+        MealDto dto = modelMapper.map(meal, MealDto.class);
+        dto.setGroupName(savedMeal.getMealGroup().getName());
+        return dto;
     }
 
     @DeleteMapping("/{id}")
