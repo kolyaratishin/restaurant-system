@@ -26,8 +26,8 @@ public class ReceiptController {
         return receiptDto;
     }
 
-    @PutMapping("/{receiptId}")
-    public ReceiptDto update(@RequestBody Receipt receipt, @PathVariable(value = "receiptId") Long receiptId){
+    @PutMapping("/{id}")
+    public ReceiptDto update(@RequestBody Receipt receipt, @PathVariable(value = "id") Long receiptId){
         Receipt savedReceipt = receiptService.update(receipt, receiptId);
         return modelMapper.map(savedReceipt, ReceiptDto.class);
     }
@@ -37,8 +37,8 @@ public class ReceiptController {
         receiptService.deleteById(id);
     }
 
-    @PostMapping("/count/{receiptId}")
-    public OrderDto countTheReceipt(@PathVariable(value = "receiptId") Long receiptId){
+    @PostMapping("/count/{id}")
+    public OrderDto countTheReceipt(@PathVariable(value = "id") Long receiptId){
         Order order = receiptService.countTheReceipt(receiptId);
         OrderDto orderDto = modelMapper.map(order, OrderDto.class);
         orderDto.setTotalPrice(order.getTotalPrice());

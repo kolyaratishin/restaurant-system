@@ -19,13 +19,13 @@ public class Order {
     @Id
     @GeneratedValue
     private Long id;
-
-    @ManyToMany
-    private List<Meal> meals;
+    @ElementCollection
+    @CollectionTable(name = "order_meals", joinColumns = @JoinColumn(name = "order_id"), foreignKey = @ForeignKey(name = "order_meal_orders_fk"))
+    private List<OrderMeal> meals;
 
     private LocalDateTime createdAt;
 
-    public void addMeals(List<Meal> meals){
+    public void addMeals(List<OrderMeal> meals){
         this.meals = new ArrayList<>();
         this.meals.addAll(meals);
     }
@@ -33,7 +33,7 @@ public class Order {
     public BigDecimal getTotalPrice(){
         if(meals != null) {
             return meals.stream()
-                    .map(Meal::getPrice)
+                    .map(OrderMeal::getPrice)
                     .reduce(BigDecimal::add)
                     .orElse(BigDecimal.ZERO);
         }
