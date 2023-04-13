@@ -2,8 +2,11 @@ package com.restaurant.controller;
 
 import com.restaurant.controller.dto.OrderDto;
 import com.restaurant.controller.dto.ReceiptDto;
+import com.restaurant.controller.request.ReceiptAddMealRequest;
+import com.restaurant.model.Meal;
 import com.restaurant.model.Order;
 import com.restaurant.model.Receipt;
+import com.restaurant.service.MealService;
 import com.restaurant.service.ReceiptService;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -15,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 public class ReceiptController {
 
     private final ReceiptService receiptService;
+    private final MealService mealService;
 
     private final ModelMapper modelMapper;
 
@@ -27,9 +31,35 @@ public class ReceiptController {
     }
 
     @PutMapping("/{id}")
-    public ReceiptDto update(@RequestBody Receipt receipt, @PathVariable(value = "id") Long receiptId){
+    public ReceiptDto update(@RequestBody ReceiptDto receiptDto, @PathVariable(value = "id") Long receiptId){
+        Receipt receipt = modelMapper.map(receiptDto, Receipt.class);
         Receipt savedReceipt = receiptService.update(receipt, receiptId);
-        return modelMapper.map(savedReceipt, ReceiptDto.class);
+        ReceiptDto response = modelMapper.map(savedReceipt, ReceiptDto.class);
+        response.setTotalPrice(savedReceipt.getTotalPrice());
+        return response;
+    }
+
+    @PostMapping("/meal")
+    public ReceiptDto addMealToReceipt(@RequestBody ReceiptAddMealRequest request){
+        Receipt receipt = receiptService.getReceiptById(request.getReceiptId());
+        Meal meal = mealService.getMealById(request.getMealId());
+        receipt.addMeal(meal);
+        Receipt savedReceipt = receiptService.save(receipt);
+        ReceiptDto response = modelMapper.map(savedReceipt, ReceiptDto.class);
+        response.setTotalPrice(savedReceipt.getTotalPrice());
+        return response;
+    }
+
+    @DeleteMapping("/{receiptId}/meal/{mealId}")
+    public ReceiptDto removeMealFromReceipt(@PathVariable(value = "receiptId") Long receiptId,
+                                            @PathVariable(value = "mealId") Long mealId){
+        Receipt receipt = receiptService.getReceiptById(receiptId);
+        Meal meal = mealService.getMealById(mealId);
+        receipt.removeMeal(meal);
+        Receipt savedReceipt = receiptService.save(receipt);
+        ReceiptDto response = modelMapper.map(savedReceipt, ReceiptDto.class);
+        response.setTotalPrice(savedReceipt.getTotalPrice());
+        return response;
     }
 
     @DeleteMapping("/{id}")

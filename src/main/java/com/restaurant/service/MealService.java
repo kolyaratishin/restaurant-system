@@ -18,4 +18,8 @@ public class MealService {
     public void deleteById(Long id){
         mealRepository.deleteById(id);
     }
+
+    public Meal getMealById(Long id){
+        return mealRepository.findById(id).orElseThrow();
+    }
 }

@@ -49,6 +49,14 @@ public class Receipt {
         this.meals.addAll(meals);
     }
 
+    public void addMeal(Meal meal){
+        this.meals.add(meal);
+    }
+
+    public void removeMeal(Meal meal){
+        this.meals.remove(meal);
+    }
+
     public void addTable(RestaurantTable table){
         this.table = table;
         table.setReceipt(this);
