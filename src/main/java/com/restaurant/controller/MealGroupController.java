@@ -1,10 +1,14 @@
 package com.restaurant.controller;
 
+import com.restaurant.controller.dto.ReceiptDto;
 import com.restaurant.controller.request.MealGroupRequest;
 import com.restaurant.controller.response.MealGroupResponse;
+import com.restaurant.model.Meal;
 import com.restaurant.model.MealGroup;
+import com.restaurant.model.Receipt;
 import com.restaurant.model.Restaurant;
 import com.restaurant.service.MealGroupService;
+import com.restaurant.service.MealService;
 import com.restaurant.service.RestaurantService;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -18,11 +22,15 @@ public class MealGroupController {
     private final ModelMapper modelMapper;
 
     private final MealGroupService mealGroupService;
+    private final MealService mealService;
     private final RestaurantService restaurantService;
 
     @GetMapping("/{id}")
-    public MealGroup getMealGroupById(@PathVariable(name = "id") Long id){
-        return mealGroupService.getMealGroupById(id);
+    public MealGroupResponse getMealGroupById(@PathVariable(name = "id") Long id){
+        MealGroup mealGroupById = mealGroupService.getMealGroupById(id);
+        MealGroupResponse response = modelMapper.map(mealGroupById, MealGroupResponse.class);
+        response.setRestaurantId(mealGroupById.getRestaurant().getId());
+        return response;
     }
 
     @PostMapping
@@ -39,5 +47,14 @@ public class MealGroupController {
     @DeleteMapping("/{id}")
     public void deleteById(@PathVariable(value = "id") Long id) {
         mealGroupService.deleteById(id);
+    }
+
+    @DeleteMapping("{groupId}/meal/{mealId}")
+    public void deleteMealFromMealGroup(@PathVariable(value = "groupId") Long groupId,
+                                        @PathVariable(value = "mealId") Long mealId) {
+        MealGroup mealGroupById = mealGroupService.getMealGroupById(groupId);
+        Meal meal = mealService.getMealById(mealId);
+        mealGroupById.removeMeal(meal);
+        mealGroupService.save(mealGroupById);
     }
 }

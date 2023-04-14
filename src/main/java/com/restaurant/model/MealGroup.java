@@ -29,4 +29,8 @@ public class MealGroup {
     public void removeAllMeals(){
         meals.clear();
     }
+
+    public void removeMeal(Meal meal){
+        meals.remove(meal);
+    }
 }
