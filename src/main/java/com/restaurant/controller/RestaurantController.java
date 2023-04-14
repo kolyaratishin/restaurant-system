@@ -54,7 +54,7 @@ public class RestaurantController {
                 .stream()
                 .map(mealGroup -> {
                     MealGroupResponse response = modelMapper.map(mealGroup, MealGroupResponse.class);
-                    response.setMenu(mealGroup.getMeals().stream()
+                    response.setMenu(mealGroup.getMenu().stream()
                             .map(meal -> modelMapper.map(meal, MealResponse.class))
                             .toList());
                     response.setRestaurantId(mealGroup.getRestaurant().getId());
