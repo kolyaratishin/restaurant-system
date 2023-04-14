@@ -8,6 +8,8 @@ import com.restaurant.repository.OrderRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class OrderService {
@@ -19,5 +21,9 @@ public class OrderService {
 
     public Order geOrderById(Long id) {
         return orderRepository.findById(id).orElseThrow();
+    }
+
+    public List<Order> getAllOrders() {
+        return orderRepository.findAll();
     }
 }
