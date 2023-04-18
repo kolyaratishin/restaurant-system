@@ -35,7 +35,7 @@ public class WebSecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.cors().and().csrf().disable()
                 .authorizeHttpRequests((authz) -> authz
-                        .requestMatchers("/api/registration").permitAll()
+                        .requestMatchers("/api/user/registration").permitAll()
                         .anyRequest().authenticated()
                 )
                 .httpBasic(withDefaults())

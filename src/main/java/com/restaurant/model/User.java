@@ -23,6 +23,6 @@ public class User {
 
     private Role role;
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL)
     private Restaurant restaurant;
 }
