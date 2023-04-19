@@ -1,7 +1,7 @@
 package com.restaurant.controller;
 
 import com.restaurant.controller.dto.UserDto;
-import com.restaurant.controller.response.RegistrationResponse;
+import com.restaurant.controller.response.UserResponse;
 import com.restaurant.model.User;
 import com.restaurant.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -27,15 +27,14 @@ public class LoginController {
     private final PasswordEncoder passwordEncoder;
 
     @PostMapping("/registration")
-    public RegistrationResponse registration(@RequestBody UserDto userDto) {
+    public UserResponse registration(@RequestBody UserDto userDto) {
         User registeredUser = userService.register(userDto);
-        RegistrationResponse response = modelMapper.map(registeredUser, RegistrationResponse.class);
-        response.setPassword(userDto.getPassword());
+        UserResponse response = modelMapper.map(registeredUser, UserResponse.class);
         response.setRestaurantId(registeredUser.getRestaurant().getId());
         return response;
     }
 
-    @PostMapping("/login")
+    @GetMapping("/login")
     public ResponseEntity<?> login(@RequestHeader("Authorization") String authHeader) {
 
         // Перевірка наявності заголовка Authorization
@@ -63,5 +62,13 @@ public class LoginController {
 
         // Повертаємо відповідь з успішним статусом
         return ResponseEntity.ok("Successfully logged in");
+    }
+
+    @GetMapping
+    public ResponseEntity<UserResponse> getUserByUsername(@RequestParam("username") String username) {
+        User user = userService.getUserByUsername(username);
+        UserResponse response = modelMapper.map(user, UserResponse.class);
+        response.setRestaurantId(user.getRestaurant().getId());
+        return ResponseEntity.ok(response);
     }
 }
