@@ -5,6 +5,9 @@ import com.restaurant.repository.MealGroupRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.Optional;
+
 @Service
 @RequiredArgsConstructor
 public class MealGroupService {
@@ -20,5 +23,13 @@ public class MealGroupService {
 
     public void deleteById(Long id) {
         mealGroupRepository.deleteById(id);
+    }
+
+    public List<MealGroup> getAll(){
+        return mealGroupRepository.findAll();
+    }
+
+    public Optional<MealGroup> getMealGroupByName(String name){
+        return mealGroupRepository.findByName(name);
     }
 }

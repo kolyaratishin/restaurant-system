@@ -2,6 +2,7 @@ package com.restaurant.service;
 
 import com.restaurant.model.Meal;
 import com.restaurant.model.MealGroup;
+import com.restaurant.model.Restaurant;
 import com.restaurant.repository.MealRepository;
 import com.restaurant.service.dto.ImportMealDto;
 import com.univocity.parsers.common.processor.BeanListProcessor;
@@ -28,19 +29,18 @@ public class CsvService {
 
     private final ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
     private final MealRepository mealRepository;
-    private final MealGroupService mealGroupService;
+    private final RestaurantService restaurantService;
     private final ImportService importService;
     private static final String DELIMITER = ",";
 
 
-    public String parseAndSave(MultipartFile file, Long mealGroupId) {
+    public String parseAndSave(MultipartFile file, Long restaurantId) {
         if (EXCEL_CSV_TYPE.equals(file.getContentType()) || CSV_TYPE.equals(file.getContentType())) {
             try {
                 InputStream inputStream = file.getInputStream();
                 parser.parse(inputStream);
-                clearDatabaseFromPreviousMeals(mealGroupId);
-                rowProcessor.getBeans().forEach(dto -> dto.setMealGroupId(mealGroupId));
-                rowProcessor.getBeans().forEach(importService::storeToDatabase);
+                clearDatabaseFromPreviousMeals(restaurantId);
+                rowProcessor.getBeans().forEach(dto -> importService.storeToDatabase(dto, restaurantId));
                 return "Save of file " + file.getOriginalFilename() + " was successful";
             } catch (IOException e) {
 //                throw new UploadExceptions(UploadExceptions.Error.SAVE_WAS_NOT_SUCCESSFUL);
@@ -50,10 +50,10 @@ public class CsvService {
         return "INVALID_FILE_FORMAT";
     }
 
-    private void clearDatabaseFromPreviousMeals(Long mealGroupId) {
-        MealGroup mealGroup = mealGroupService.getMealGroupById(mealGroupId);
-        mealGroup.removeAllMeals();
-        mealGroupService.save(mealGroup);
+    private void clearDatabaseFromPreviousMeals(Long restaurantId) {
+        Restaurant restaurant = restaurantService.getRestaurantById(restaurantId);
+        restaurant.removeAllMealGroups();
+        restaurantService.save(restaurant);
     }
 
     public byte[] export() {

@@ -12,8 +12,8 @@ public class ImportController {
 
     private final CsvService csvService;
 
-    @PostMapping("/meals/{mealGroup}")
-    public String uploadCsv(@RequestParam("file") MultipartFile file, @PathVariable(value = "mealGroup") Long mealGroup) {
-        return csvService.parseAndSave(file, mealGroup);
+    @PostMapping("/restaurant/{restaurantId}")
+    public String uploadCsv(@RequestParam("file") MultipartFile file, @PathVariable(value = "restaurantId") Long restaurantId) {
+        return csvService.parseAndSave(file, restaurantId);
     }
 }

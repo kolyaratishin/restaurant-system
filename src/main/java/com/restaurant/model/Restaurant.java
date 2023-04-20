@@ -25,4 +25,7 @@ public class Restaurant {
     @OneToMany(mappedBy = "restaurant")
     private List<RestaurantTable> tables;
 
+    public void removeAllMealGroups(){
+        mealGroups.clear();
+    }
 }

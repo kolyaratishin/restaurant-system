@@ -33,5 +33,11 @@ public class MealGroup {
 
     public void removeMeal(Meal meal){
         menu.remove(meal);
+        meal.setMealGroup(null);
+    }
+
+    public void addMeal(Meal meal){
+        menu.add(meal);
+        meal.setMealGroup(this);
     }
 }

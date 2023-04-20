@@ -15,5 +15,6 @@ public class ImportMealDto {
     private String name;
     @Parsed(field = "price")
     private BigDecimal price;
-    private Long mealGroupId;
+    @Parsed(field = "mealGroupName")
+    private String mealGroupName;
 }

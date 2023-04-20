@@ -1,11 +1,9 @@
 package com.restaurant.controller;
 
-import com.restaurant.controller.dto.ReceiptDto;
 import com.restaurant.controller.request.MealGroupRequest;
 import com.restaurant.controller.response.MealGroupResponse;
 import com.restaurant.model.Meal;
 import com.restaurant.model.MealGroup;
-import com.restaurant.model.Receipt;
 import com.restaurant.model.Restaurant;
 import com.restaurant.service.MealGroupService;
 import com.restaurant.service.MealService;
@@ -13,6 +11,8 @@ import com.restaurant.service.RestaurantService;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/group")
@@ -26,7 +26,7 @@ public class MealGroupController {
     private final RestaurantService restaurantService;
 
     @GetMapping("/{id}")
-    public MealGroupResponse getMealGroupById(@PathVariable(name = "id") Long id){
+    public MealGroupResponse getMealGroupById(@PathVariable(name = "id") Long id) {
         MealGroup mealGroupById = mealGroupService.getMealGroupById(id);
         MealGroupResponse response = modelMapper.map(mealGroupById, MealGroupResponse.class);
         response.setRestaurantId(mealGroupById.getRestaurant().getId());
@@ -56,5 +56,13 @@ public class MealGroupController {
         Meal meal = mealService.getMealById(mealId);
         mealGroupById.removeMeal(meal);
         mealGroupService.save(mealGroupById);
+    }
+
+    @GetMapping
+    public List<MealGroupResponse> getAllMealGroups() {
+        return mealGroupService.getAll()
+                .stream()
+                .map(mealGroup -> modelMapper.map(mealGroup, MealGroupResponse.class))
+                .toList();
     }
 }
