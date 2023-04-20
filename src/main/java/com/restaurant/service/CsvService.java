@@ -27,8 +27,7 @@ public class CsvService {
     private static final String CSV_TYPE = "text/csv";
     private static final String EXCEL_CSV_TYPE = "application/vnd.ms-excel";
 
-    private final ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-    private final MealRepository mealRepository;
+    private ByteArrayOutputStream byteArrayOutputStream;
     private final RestaurantService restaurantService;
     private final ImportService importService;
     private static final String DELIMITER = ",";
@@ -56,9 +55,10 @@ public class CsvService {
         restaurantService.save(restaurant);
     }
 
-    public byte[] export() {
+    public byte[] export(Long restaurantId) {
+        byteArrayOutputStream = new ByteArrayOutputStream();
         addHeader();
-        addRows();
+        addRows(restaurantId);
         return byteArrayOutputStream.toByteArray();
     }
 
@@ -69,24 +69,30 @@ public class CsvService {
     }
 
     private String[] createHeader() {
-        return new String[]{"name" + DELIMITER, "price"};
+        return new String[]{"name" + DELIMITER, "price" + DELIMITER, "mealGroupName"};
     }
 
-    private void addRows() {
-        mealRepository.findAll().stream()
+    private void addRows(Long restaurantId) {
+        Restaurant restaurant = restaurantService.getRestaurantById(restaurantId);
+        restaurant.getMealGroups().stream()
                 .map(this::createRow)
                 .forEach(row -> row.forEach(this::write));
     }
 
-    private List<byte[]> createRow(Meal meal) {
+    private List<byte[]> createRow(MealGroup mealGroup) {
         List<byte[]> bytesList = new ArrayList<>();
 
-        byte[] price = meal.getPrice().toString().getBytes(StandardCharsets.UTF_8);
+        mealGroup.getMenu()
+                .forEach(meal -> {
+                    byte[] price = meal.getPrice().toString().getBytes(StandardCharsets.UTF_8);
 
-        bytesList.add("\n".getBytes());
-        bytesList.add(meal.getName().getBytes(StandardCharsets.UTF_8));
-        bytesList.add(DELIMITER.getBytes());
-        bytesList.add(price);
+                    bytesList.add("\n".getBytes());
+                    bytesList.add(meal.getName().getBytes(StandardCharsets.UTF_8));
+                    bytesList.add(DELIMITER.getBytes());
+                    bytesList.add(price);
+                    bytesList.add(DELIMITER.getBytes());
+                    bytesList.add(mealGroup.getName().getBytes(StandardCharsets.UTF_8));
+                });
 
         return bytesList;
     }

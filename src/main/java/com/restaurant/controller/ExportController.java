@@ -7,6 +7,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -17,9 +18,9 @@ public class ExportController {
 
     private final CsvService csvService;
 
-    @GetMapping("/csv")
-    public ResponseEntity<ByteArrayResource> exportToCsv() {
-        byte[] bytes = csvService.export();
+    @GetMapping("/csv/{restaurantId}")
+    public ResponseEntity<ByteArrayResource> exportToCsv(@PathVariable(value = "restaurantId") Long restaurantId) {
+        byte[] bytes = csvService.export(restaurantId);
         ByteArrayResource resource = new ByteArrayResource(bytes);
 
         HttpHeaders headers = new HttpHeaders();
