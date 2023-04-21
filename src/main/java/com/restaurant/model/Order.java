@@ -25,6 +25,9 @@ public class Order {
 
     private LocalDateTime createdAt;
 
+    @OneToOne
+    private Restaurant restaurant;
+
     public void addMeals(List<OrderMeal> meals){
         this.meals = new ArrayList<>();
         this.meals.addAll(meals);

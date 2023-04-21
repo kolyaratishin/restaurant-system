@@ -50,6 +50,7 @@ public class ReceiptService {
                 .toList();
         order.addMeals(orderMeals);
         order.setCreatedAt(LocalDateTime.now());
+        order.setRestaurant(receiptById.getTable().getRestaurant());
         Order savedOrder = orderService.save(order);
         tableService.changeStatus(receiptById.getTable().getId(), TableStatus.FREE);
         deleteById(receiptId);
