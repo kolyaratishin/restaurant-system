@@ -18,8 +18,8 @@ public class Receipt {
     @Column(name = "table_id")
     private Long id;
 
-    @ManyToMany
-    private List<Meal> meals;
+    @OneToMany(mappedBy = "receipt", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<ReceiptMeal> meals;
 
     @OneToOne
     @MapsId
@@ -29,7 +29,7 @@ public class Receipt {
     public BigDecimal getTotalPrice(){
         if(meals != null) {
             return meals.stream()
-                    .map(Meal::getPrice)
+                    .map(ReceiptMeal::getTotalPrice)
                     .reduce(BigDecimal::add)
                     .orElse(BigDecimal.ZERO);
         }
@@ -45,16 +45,19 @@ public class Receipt {
         this.table = null;
     }
 
-    public void addAllMeals(List<Meal> meals){
+    public void addAllMeals(List<ReceiptMeal> meals){
         this.meals.addAll(meals);
     }
 
-    public void addMeal(Meal meal){
+    public void addMeal(ReceiptMeal meal){
         this.meals.add(meal);
+        meal.setReceipt(this);
     }
 
-    public void removeMeal(Meal meal){
-        this.meals.remove(meal);
+    public void removeMeal(ReceiptMeal receiptMeal){
+        this.meals.remove(receiptMeal);
+        receiptMeal.setReceipt(null);
+        receiptMeal.setMeal(null);
     }
 
     public void addTable(RestaurantTable table){

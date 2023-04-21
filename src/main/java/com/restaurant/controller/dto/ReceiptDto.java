@@ -1,6 +1,6 @@
 package com.restaurant.controller.dto;
 
-import com.restaurant.controller.response.MealResponse;
+import com.restaurant.controller.response.ReceiptMealResponse;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -13,6 +13,6 @@ import java.util.List;
 @AllArgsConstructor
 public class ReceiptDto {
     private Long id;
-    private List<MealResponse> meals;
+    private List<ReceiptMealResponse> meals;
     private BigDecimal totalPrice;
 }
