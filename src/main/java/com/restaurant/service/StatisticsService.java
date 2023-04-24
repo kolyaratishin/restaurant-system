@@ -30,4 +30,17 @@ public class StatisticsService {
                 .map(entry -> new MealsCountInOrderDto(entry.getKey(), entry.getValue()))
                 .collect(toList());
     }
+
+    public List<MealsCountInOrderDto> getAllMealsGroupsInOrders(Long restaurantId) {
+        List<Order> orders = orderService.getAllOrders();
+        List<OrderMeal> orderMeals = new ArrayList<>();
+        orders.stream()
+                .filter(order -> order.getRestaurant().getId().equals(restaurantId))
+                .forEach(order -> orderMeals.addAll(order.getMeals()));
+        return orderMeals.stream()
+                .collect(toMap(OrderMeal::getGroupName, OrderMeal::getAmount, Long::sum))
+                .entrySet().stream()
+                .map(entry -> new MealsCountInOrderDto(entry.getKey(), entry.getValue()))
+                .collect(toList());
+    }
 }

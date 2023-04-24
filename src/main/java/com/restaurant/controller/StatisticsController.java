@@ -21,4 +21,9 @@ public class StatisticsController {
     public List<MealsCountInOrderDto> getAllMealsInOrders(@RequestParam(value = "restaurantId")Long restaurantId) {
         return statisticsService.getAllMealsInOrders(restaurantId);
     }
+
+    @GetMapping("/mealsGroup/count/order")
+    public List<MealsCountInOrderDto> getAllMealsGroupsInOrders(@RequestParam(value = "restaurantId")Long restaurantId) {
+        return statisticsService.getAllMealsGroupsInOrders(restaurantId);
+    }
 }
