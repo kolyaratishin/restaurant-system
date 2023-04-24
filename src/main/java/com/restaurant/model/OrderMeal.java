@@ -17,4 +17,6 @@ public class OrderMeal {
     private BigDecimal price;
 
     private Long amount;
+
+    private String groupName;
 }
