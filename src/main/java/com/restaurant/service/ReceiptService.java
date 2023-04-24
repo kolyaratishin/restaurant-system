@@ -46,7 +46,7 @@ public class ReceiptService {
         Receipt receiptById = getReceiptById(receiptId);
         Order order = new Order();
         List<OrderMeal> orderMeals = receiptById.getMeals().stream()
-                .map(receiptMeal -> new OrderMeal(receiptMeal.getMeal().getName(), receiptMeal.getMeal().getPrice()))
+                .map(receiptMeal -> new OrderMeal(receiptMeal.getMeal().getName(), receiptMeal.getMeal().getPrice(), receiptMeal.getAmount()))
                 .toList();
         order.addMeals(orderMeals);
         order.setCreatedAt(LocalDateTime.now());
