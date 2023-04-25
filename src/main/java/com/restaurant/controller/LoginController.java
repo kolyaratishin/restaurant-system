@@ -1,6 +1,7 @@
 package com.restaurant.controller;
 
 import com.restaurant.controller.dto.UserDto;
+import com.restaurant.controller.request.EmployeeRequest;
 import com.restaurant.controller.response.UserResponse;
 import com.restaurant.model.User;
 import com.restaurant.service.UserService;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/user")
@@ -70,5 +72,26 @@ public class LoginController {
         UserResponse response = modelMapper.map(user, UserResponse.class);
         response.setRestaurantId(user.getRestaurant().getId());
         return ResponseEntity.ok(response);
+    }
+
+    @PostMapping("/employee")
+    public ResponseEntity<UserResponse> addEmployee(@RequestBody EmployeeRequest request, @RequestParam(value = "username") String adminUsername) {
+        User user = userService.addEmployee(request, adminUsername);
+        UserResponse response = modelMapper.map(user, UserResponse.class);
+        response.setRestaurantId(user.getRestaurant().getId());
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/employee")
+    public ResponseEntity<List<UserResponse>> getAllEmployees(@RequestParam(value = "username") String adminUsername) {
+        List<User> employees = userService.getAllEmployees(adminUsername);
+        return ResponseEntity.ok(
+                employees.stream()
+                        .map(employee -> modelMapper.map(employee, UserResponse.class))
+                        .toList());
+    }
+    @DeleteMapping("/{id}")
+    public void deleteUser(@PathVariable(value = "id") Long id) {
+        userService.deleteById(id);
     }
 }
