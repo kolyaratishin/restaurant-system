@@ -35,21 +35,9 @@ public class RestaurantTableController {
         restaurantTableService.deleteById(id);
     }
 
-    @PostMapping("/status/free/{tableId}")
-    public TableDto changeStatusToFree(@PathVariable(value = "tableId") Long tableId) {
-        RestaurantTable table = restaurantTableService.changeStatus(tableId, TableStatus.FREE);
-        return modelMapper.map(table, TableDto.class);
-    }
-
-    @PostMapping("/status/reserved/{tableId}")
-    public TableDto changeStatusToReserved(@PathVariable(value = "tableId") Long tableId) {
-        RestaurantTable table = restaurantTableService.changeStatus(tableId, TableStatus.RESERVED);
-        return modelMapper.map(table, TableDto.class);
-    }
-
-    @PostMapping("/status/busy/{tableId}")
-    public TableDto changeStatusToBusy(@PathVariable(value = "tableId") Long tableId) {
-        RestaurantTable table = restaurantTableService.changeStatus(tableId, TableStatus.BUSY);
+    @PostMapping("/status/{tableId}")
+    public TableDto changeStatusToFree(@PathVariable(value = "tableId") Long tableId, @RequestParam("status")String status) {
+        RestaurantTable table = restaurantTableService.changeStatus(tableId, TableStatus.valueOf(status));
         return modelMapper.map(table, TableDto.class);
     }
 
