@@ -31,14 +31,20 @@ public class RestaurantTableController {
     }
 
     @DeleteMapping("/{id}")
-    public void deleteById(@PathVariable(value = "id") Long id) {
+    public TableDto deleteById(@PathVariable(value = "id") Long id) {
+        RestaurantTable tableById = restaurantTableService.getTableById(id);
+        TableDto response = modelMapper.map(tableById, TableDto.class);
+        response.setRestaurantId(tableById.getRestaurant().getId());
         restaurantTableService.deleteById(id);
+        return response;
     }
 
     @PostMapping("/status/{tableId}")
-    public TableDto changeStatusToFree(@PathVariable(value = "tableId") Long tableId, @RequestParam("status")String status) {
+    public TableDto changeStatusToFree(@PathVariable(value = "tableId") Long tableId, @RequestParam("status") String status) {
         RestaurantTable table = restaurantTableService.changeStatus(tableId, TableStatus.valueOf(status));
-        return modelMapper.map(table, TableDto.class);
+        TableDto response = modelMapper.map(table, TableDto.class);
+        response.setRestaurantId(table.getRestaurant().getId());
+        return response;
     }
 
     @GetMapping("/{tableId}")
