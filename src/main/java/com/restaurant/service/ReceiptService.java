@@ -93,4 +93,15 @@ public class ReceiptService {
                 });
         return save(receipt);
     }
+
+    public Receipt updateMealAmount(Long receiptId, Long mealId, Long amount) {
+        Receipt receipt = getReceiptById(receiptId);
+        receipt.getMeals().stream()
+                .filter(receiptMeal -> receiptMeal.getMeal().getId().equals(mealId))
+                .findFirst()
+                .ifPresent(receiptMeal -> {
+                    receiptMeal.setAmount(amount);
+                });
+        return save(receipt);
+    }
 }

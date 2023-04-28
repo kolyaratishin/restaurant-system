@@ -78,6 +78,13 @@ public class ReceiptController {
                 .toList();
     }
 
+    @PutMapping("{receiptId}/meal/{mealId}")
+    public ReceiptDto updateAmountOfMeal(@PathVariable(value = "receiptId") Long receiptId,
+                                         @PathVariable(value = "mealId") Long mealId,
+                                         @RequestParam(value = "amount") Long amount) {
+        return createReceiptDto(receiptService.updateMealAmount(receiptId, mealId, amount));
+    }
+
     private ReceiptDto createReceiptDto(Receipt receipt) {
         ReceiptDto receiptDto = new ReceiptDto();
         List<ReceiptMealResponse> meals = receipt.getMeals().stream()
