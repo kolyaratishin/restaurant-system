@@ -1,5 +1,6 @@
 package com.restaurant.service;
 
+import com.restaurant.controller.request.UpdateMealRequest;
 import com.restaurant.model.Meal;
 import com.restaurant.repository.MealRepository;
 import lombok.RequiredArgsConstructor;
@@ -21,5 +22,12 @@ public class MealService {
 
     public Meal getMealById(Long id){
         return mealRepository.findById(id).orElseThrow();
+    }
+
+    public Meal updateMeal(Long id, UpdateMealRequest request){
+        Meal mealById = getMealById(id);
+        mealById.setName(request.getName());
+        mealById.setPrice(request.getPrice());
+        return save(mealById);
     }
 }
