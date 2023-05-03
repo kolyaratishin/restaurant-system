@@ -1,6 +1,7 @@
 package com.restaurant.service;
 
 import com.restaurant.controller.request.UpdateMealRequest;
+import com.restaurant.exception.EntityByIdNotFoundException;
 import com.restaurant.model.Meal;
 import com.restaurant.repository.MealRepository;
 import lombok.RequiredArgsConstructor;
@@ -21,7 +22,7 @@ public class MealService {
     }
 
     public Meal getMealById(Long id){
-        return mealRepository.findById(id).orElseThrow();
+        return mealRepository.findById(id).orElseThrow(() -> new EntityByIdNotFoundException(id));
     }
 
     public Meal updateMeal(Long id, UpdateMealRequest request){

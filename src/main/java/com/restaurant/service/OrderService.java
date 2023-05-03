@@ -1,9 +1,8 @@
 package com.restaurant.service;
 
 
+import com.restaurant.exception.EntityByIdNotFoundException;
 import com.restaurant.model.Order;
-import com.restaurant.model.Receipt;
-import com.restaurant.model.RestaurantTable;
 import com.restaurant.repository.OrderRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -19,8 +18,8 @@ public class OrderService {
         return orderRepository.save(order);
     }
 
-    public Order geOrderById(Long id) {
-        return orderRepository.findById(id).orElseThrow();
+    public Order getOrderById(Long id) {
+        return orderRepository.findById(id).orElseThrow(() -> new EntityByIdNotFoundException(id));
     }
 
     public List<Order> getAllOrders() {

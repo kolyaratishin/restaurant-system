@@ -1,6 +1,7 @@
 package com.restaurant.service;
 
 import com.restaurant.controller.request.ReceiptAddMealRequest;
+import com.restaurant.exception.EntityByIdNotFoundException;
 import com.restaurant.model.*;
 import com.restaurant.repository.ReceiptMealRepository;
 import com.restaurant.repository.ReceiptRepository;
@@ -32,7 +33,7 @@ public class ReceiptService {
     }
 
     public Receipt getReceiptById(Long id) {
-        return receiptRepository.findById(id).orElseThrow();
+        return receiptRepository.findById(id).orElseThrow(() -> new EntityByIdNotFoundException(id));
     }
 
     public Receipt update(Receipt receipt, Long receiptId) {

@@ -1,5 +1,6 @@
 package com.restaurant.service;
 
+import com.restaurant.exception.EntityByIdNotFoundException;
 import com.restaurant.model.MealGroup;
 import com.restaurant.repository.MealGroupRepository;
 import lombok.RequiredArgsConstructor;
@@ -14,7 +15,7 @@ public class MealGroupService {
     private final MealGroupRepository mealGroupRepository;
 
     public MealGroup getMealGroupById(Long id){
-        return mealGroupRepository.findById(id).orElseThrow();
+        return mealGroupRepository.findById(id).orElseThrow(() -> new EntityByIdNotFoundException(id));
     }
 
     public MealGroup save(MealGroup mealGroup) {

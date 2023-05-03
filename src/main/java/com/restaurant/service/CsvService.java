@@ -1,9 +1,9 @@
 package com.restaurant.service;
 
-import com.restaurant.model.Meal;
+import com.restaurant.exception.ExportExceptions;
+import com.restaurant.exception.UploadExceptions;
 import com.restaurant.model.MealGroup;
 import com.restaurant.model.Restaurant;
-import com.restaurant.repository.MealRepository;
 import com.restaurant.service.dto.ImportMealDto;
 import com.univocity.parsers.common.processor.BeanListProcessor;
 import com.univocity.parsers.csv.CsvParser;
@@ -42,11 +42,10 @@ public class CsvService {
                 rowProcessor.getBeans().forEach(dto -> importService.storeToDatabase(dto, restaurantId));
                 return "Save of file " + file.getOriginalFilename() + " was successful";
             } catch (IOException e) {
-//                throw new UploadExceptions(UploadExceptions.Error.SAVE_WAS_NOT_SUCCESSFUL);
+                throw new UploadExceptions(UploadExceptions.Error.SAVE_WAS_NOT_SUCCESSFUL);
             }
         }
-//        throw new UploadExceptions(UploadExceptions.Error.INVALID_FILE_FORMAT);
-        return "INVALID_FILE_FORMAT";
+        throw new UploadExceptions(UploadExceptions.Error.INVALID_FILE_FORMAT);
     }
 
     private void clearDatabaseFromPreviousMeals(Long restaurantId) {
@@ -101,7 +100,7 @@ public class CsvService {
         try {
             byteArrayOutputStream.write(bytes);
         } catch (IOException e) {
-//            throw new ExportExceptions(ExportExceptions.Error.WRITE_TO_CSV_IS_BAD);
+            throw new ExportExceptions(ExportExceptions.Error.WRITE_TO_CSV_IS_BAD);
         }
     }
 

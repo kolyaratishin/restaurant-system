@@ -1,5 +1,6 @@
 package com.restaurant.service;
 
+import com.restaurant.exception.EntityByIdNotFoundException;
 import com.restaurant.model.*;
 import com.restaurant.repository.RestaurantTableRepository;
 import lombok.RequiredArgsConstructor;
@@ -21,7 +22,7 @@ public class RestaurantTableService {
     }
 
     public RestaurantTable getTableById(Long id){
-        return tableRepository.findById(id).orElseThrow();
+        return tableRepository.findById(id).orElseThrow(() -> new EntityByIdNotFoundException(id));
     }
 
     public RestaurantTable changeStatus(Long id, TableStatus status){

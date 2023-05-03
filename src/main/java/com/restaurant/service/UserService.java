@@ -2,6 +2,7 @@ package com.restaurant.service;
 
 import com.restaurant.controller.dto.UserDto;
 import com.restaurant.controller.request.EmployeeRequest;
+import com.restaurant.exception.EntityByIdNotFoundException;
 import com.restaurant.model.Restaurant;
 import com.restaurant.model.Role;
 import com.restaurant.model.User;
@@ -53,7 +54,7 @@ public class UserService {
     }
 
     public User getUserById(Long id) {
-        return userRepository.findById(id).orElseThrow();
+        return userRepository.findById(id).orElseThrow(() -> new EntityByIdNotFoundException(id));
     }
 
     public void deleteById(Long id) {
