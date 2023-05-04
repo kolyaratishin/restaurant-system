@@ -50,8 +50,11 @@ public class CsvService {
 
     private void clearDatabaseFromPreviousMeals(Long restaurantId) {
         Restaurant restaurant = restaurantService.getRestaurantById(restaurantId);
-        restaurant.removeAllMealGroups();
-        restaurantService.save(restaurant);
+        restaurant.getTables()
+                .forEach(table -> table.getReceipt().removeAllMeals());
+        Restaurant savedRestaurant = restaurantService.save(restaurant);
+        savedRestaurant.removeAllMealGroups();
+        restaurantService.save(savedRestaurant);
     }
 
     public byte[] export(Long restaurantId) {
