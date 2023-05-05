@@ -27,6 +27,7 @@ public class UserService {
         user.setRole(Role.ADMIN);
         Restaurant restaurant = new Restaurant();
         user.setRestaurant(restaurant);
+        restaurant.setOwner(user);
         userRepository.save(user);
         return user;
     }
@@ -68,5 +69,10 @@ public class UserService {
             userRepository.deleteById(id);
             userRepository.save(admin);
         }
+    }
+
+    public boolean isUserExist(String username, String password) {
+        User user = getUserByUsername(username);
+        return passwordEncoder.matches(password, user.getPassword());
     }
 }

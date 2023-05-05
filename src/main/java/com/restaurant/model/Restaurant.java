@@ -25,6 +25,9 @@ public class Restaurant {
     @OneToMany(mappedBy = "restaurant", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<RestaurantTable> tables;
 
+    @OneToOne
+    private User owner;
+
     public void removeAllMealGroups(){
         mealGroups.clear();
     }

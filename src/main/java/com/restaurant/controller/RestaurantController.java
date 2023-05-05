@@ -27,12 +27,6 @@ public class RestaurantController {
         return modelMapper.map(restaurant, RestaurantDto.class);
     }
 
-    @PostMapping
-    public RestaurantDto save(@RequestBody Restaurant restaurant){
-        Restaurant savedRestaurant = restaurantService.save(restaurant);
-        return modelMapper.map(savedRestaurant, RestaurantDto.class);
-    }
-
     @DeleteMapping("/{id}")
     public void deleteById(@PathVariable(value = "id") Long id) {
         restaurantService.deleteById(id);
