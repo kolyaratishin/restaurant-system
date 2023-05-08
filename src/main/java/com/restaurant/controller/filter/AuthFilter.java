@@ -17,7 +17,9 @@ import java.util.Set;
 public class AuthFilter extends OncePerRequestFilter {
 
     private final Handler handler;
-    private final Set<String> URIsToFilter = Set.of("/api/restaurant/");
+    private final Set<String> URIsToFilter = Set.of("/api/restaurant/",
+            "/api/export",
+            "/api/import");
 
     private final UserService userService;
 
