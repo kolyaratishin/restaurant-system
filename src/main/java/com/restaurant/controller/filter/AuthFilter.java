@@ -1,6 +1,7 @@
 package com.restaurant.controller.filter;
 
 import com.restaurant.controller.filter.auth.Handler;
+import com.restaurant.controller.filter.util.BodyHttpServletRequestWrapper;
 import com.restaurant.service.UserService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -19,22 +20,25 @@ public class AuthFilter extends OncePerRequestFilter {
     private final Handler handler;
     private final Set<String> URIsToFilter = Set.of("/api/restaurant/",
             "/api/export",
-            "/api/import");
+            "/api/import",
+            "/api/meal");
 
     private final UserService userService;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) {
+        BodyHttpServletRequestWrapper requestWrapper = new BodyHttpServletRequestWrapper(request);
+
         URIsToFilter.stream()
-                .filter(uri -> request.getRequestURI().startsWith(uri))
+                .filter(uri -> requestWrapper.getRequestURI().startsWith(uri))
                 .findFirst()
                 .ifPresentOrElse((uri) -> {
-                    if (checkWhetherUserHasAccess(request)) {
-                        doFilter(request, response, filterChain);
+                    if (checkWhetherUserHasAccess(requestWrapper)) {
+                        doFilter(requestWrapper, response, filterChain);
                     } else {
                         sendError(response);
                     }
-                }, () -> doFilter(request, response, filterChain));
+                }, () -> doFilter(requestWrapper, response, filterChain));
     }
 
     private void sendError(HttpServletResponse response) {
@@ -54,7 +58,7 @@ public class AuthFilter extends OncePerRequestFilter {
         }
     }
 
-    private boolean checkWhetherUserHasAccess(HttpServletRequest request) {
+    private boolean checkWhetherUserHasAccess(BodyHttpServletRequestWrapper request) {
         String authHeader = request.getHeader("Authorization");
         if (authHeader != null && authHeader.startsWith("Basic ")) {
             // розкодувати ім'я користувача та пароль з заголовку Authorization
@@ -68,7 +72,7 @@ public class AuthFilter extends OncePerRequestFilter {
     }
 
 
-    private boolean hasAccess(String username, String password, HttpServletRequest request) {
+    private boolean hasAccess(String username, String password, BodyHttpServletRequestWrapper request) {
         if (userService.isUserExist(username, password))
             return this.handler.handle(username, password, request);
         return false;

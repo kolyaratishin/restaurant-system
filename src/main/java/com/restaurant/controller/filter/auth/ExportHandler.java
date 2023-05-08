@@ -1,5 +1,6 @@
 package com.restaurant.controller.filter.auth;
 
+import com.restaurant.controller.filter.util.BodyHttpServletRequestWrapper;
 import com.restaurant.model.Restaurant;
 import com.restaurant.service.RestaurantService;
 import jakarta.servlet.http.HttpServletRequest;
@@ -13,7 +14,7 @@ public class ExportHandler extends Handler{
     private final String EXPORT_URI = "/api/export/";
     private final RestaurantService restaurantService;
     @Override
-    public boolean authoritiesCheck(String username, String password, HttpServletRequest request) {
+    public boolean authoritiesCheck(String username, String password, BodyHttpServletRequestWrapper request) {
         String requestURI = request.getRequestURI();
         if (requestURI.startsWith(EXPORT_URI)) {
             String method = request.getMethod();

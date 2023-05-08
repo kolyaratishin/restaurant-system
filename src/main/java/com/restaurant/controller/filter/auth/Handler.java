@@ -1,5 +1,6 @@
 package com.restaurant.controller.filter.auth;
 
+import com.restaurant.controller.filter.util.BodyHttpServletRequestWrapper;
 import com.restaurant.model.Restaurant;
 import jakarta.servlet.http.HttpServletRequest;
 
@@ -20,7 +21,7 @@ public abstract class Handler {
         return first;
     }
 
-    public boolean handle(String username, String password, HttpServletRequest request) {
+    public boolean handle(String username, String password, BodyHttpServletRequestWrapper request) {
         if (authoritiesCheck(username, password, request)) {
             return true;
         } else if (this.nextHandler == null) {
@@ -29,5 +30,5 @@ public abstract class Handler {
         return this.nextHandler.handle(username, password, request);
     }
 
-    public abstract boolean authoritiesCheck(String username, String password, HttpServletRequest request);
+    public abstract boolean authoritiesCheck(String username, String password, BodyHttpServletRequestWrapper request);
 }
