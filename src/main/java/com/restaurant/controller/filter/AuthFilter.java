@@ -21,7 +21,8 @@ public class AuthFilter extends OncePerRequestFilter {
     private final Set<String> URIsToFilter = Set.of("/api/restaurant/",
             "/api/export",
             "/api/import",
-            "/api/meal");
+            "/api/meal",
+            "/api/group");
 
     private final UserService userService;
 

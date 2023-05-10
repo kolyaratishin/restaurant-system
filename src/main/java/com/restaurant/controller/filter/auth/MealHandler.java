@@ -10,7 +10,6 @@ import com.restaurant.service.MealGroupService;
 import com.restaurant.service.MealService;
 import com.restaurant.service.RestaurantService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -18,7 +17,6 @@ import org.springframework.stereotype.Component;
 public class MealHandler extends Handler {
     private final String MEAL_URI = "/api/meal";
     private final RestaurantService restaurantService;
-    @Qualifier("mealRequestObjectMapper")
     private final ObjectMapper objectMapper;
     private final MealGroupService mealGroupService;
     private final MealService mealService;
