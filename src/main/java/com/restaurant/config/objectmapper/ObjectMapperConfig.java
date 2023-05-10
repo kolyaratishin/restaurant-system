@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.restaurant.controller.request.MealGroupRequest;
 import com.restaurant.controller.request.MealRequest;
+import com.restaurant.controller.request.ReceiptAddMealRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -18,6 +19,7 @@ public class ObjectMapperConfig {
                 new SimpleModule("RequestDeserializer", new Version(1, 0, 0, null, null, null));
         module.addDeserializer(MealRequest.class, new MealRequestDeserializer());
         module.addDeserializer(MealGroupRequest.class, new MealGroupRequestDeserializer());
+        module.addDeserializer(ReceiptAddMealRequest.class, new ReceiptAddMealRequestDeserializer());
         mapper.registerModule(module);
         return mapper;
     }
