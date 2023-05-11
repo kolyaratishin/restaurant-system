@@ -24,7 +24,8 @@ public class AuthFilter extends OncePerRequestFilter {
             "/api/meal",
             "/api/group",
             "/api/receipt",
-            "/api/table");
+            "/api/table",
+            "/api/statistics/");
 
     private final UserService userService;
 
