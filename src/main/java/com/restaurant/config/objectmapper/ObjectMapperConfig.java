@@ -3,6 +3,7 @@ package com.restaurant.config.objectmapper;
 import com.fasterxml.jackson.core.Version;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.module.SimpleModule;
+import com.restaurant.controller.dto.TableDto;
 import com.restaurant.controller.request.MealGroupRequest;
 import com.restaurant.controller.request.MealRequest;
 import com.restaurant.controller.request.ReceiptAddMealRequest;
@@ -20,6 +21,7 @@ public class ObjectMapperConfig {
         module.addDeserializer(MealRequest.class, new MealRequestDeserializer());
         module.addDeserializer(MealGroupRequest.class, new MealGroupRequestDeserializer());
         module.addDeserializer(ReceiptAddMealRequest.class, new ReceiptAddMealRequestDeserializer());
+        module.addDeserializer(TableDto.class, new TableDtoDeserializer());
         mapper.registerModule(module);
         return mapper;
     }
