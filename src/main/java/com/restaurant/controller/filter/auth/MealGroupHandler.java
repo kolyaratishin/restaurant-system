@@ -22,7 +22,7 @@ public class MealGroupHandler extends Handler{
     private final MealGroupService mealGroupService;
 
     @Override
-    public boolean authoritiesCheck(String username, String password, BodyHttpServletRequestWrapper request) {
+    public boolean authoritiesCheck(String username, String password, BodyHttpServletRequestWrapper request) throws Exception {
         String requestURI = request.getRequestURI();
         if (requestURI.startsWith(MEAL_GROUP_URI)) {
             String method = request.getMethod();

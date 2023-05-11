@@ -3,7 +3,6 @@ package com.restaurant.controller.filter.auth;
 import com.restaurant.controller.filter.util.BodyHttpServletRequestWrapper;
 import com.restaurant.model.Restaurant;
 import com.restaurant.service.RestaurantService;
-import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -14,7 +13,7 @@ public class ImportHandler extends Handler {
     private final RestaurantService restaurantService;
 
     @Override
-    public boolean authoritiesCheck(String username, String password, BodyHttpServletRequestWrapper request) {
+    public boolean authoritiesCheck(String username, String password, BodyHttpServletRequestWrapper request) throws Exception {
         String requestURI = request.getRequestURI();
         if (requestURI.startsWith(IMPORT_URI)) {
             String method = request.getMethod();

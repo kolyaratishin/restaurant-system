@@ -28,24 +28,28 @@ public class AuthFilter extends OncePerRequestFilter {
             "/api/statistics/");
 
     private final UserService userService;
+    private boolean isErrorOccurred;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) {
         BodyHttpServletRequestWrapper requestWrapper = new BodyHttpServletRequestWrapper(request);
+        this.isErrorOccurred = false;
 
         URIsToFilter.stream()
                 .filter(uri -> requestWrapper.getRequestURI().startsWith(uri))
                 .findFirst()
                 .ifPresentOrElse((uri) -> {
-                    if (checkWhetherUserHasAccess(requestWrapper)) {
+                    if (checkWhetherUserHasAccess(requestWrapper, response)) {
                         doFilter(requestWrapper, response, filterChain);
                     } else {
-                        sendError(response);
+                        if (!isErrorOccurred) {
+                            sendUnauthorizedError(response);
+                        }
                     }
                 }, () -> doFilter(requestWrapper, response, filterChain));
     }
 
-    private void sendError(HttpServletResponse response) {
+    private void sendUnauthorizedError(HttpServletResponse response) {
         try {
             response.setHeader("WWW-Authenticate", "Basic realm=\"Access to the resource is restricted\"");
             response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
@@ -62,7 +66,7 @@ public class AuthFilter extends OncePerRequestFilter {
         }
     }
 
-    private boolean checkWhetherUserHasAccess(BodyHttpServletRequestWrapper request) {
+    private boolean checkWhetherUserHasAccess(BodyHttpServletRequestWrapper request, HttpServletResponse response) {
         String authHeader = request.getHeader("Authorization");
         if (authHeader != null && authHeader.startsWith("Basic ")) {
             // розкодувати ім'я користувача та пароль з заголовку Authorization
@@ -70,15 +74,34 @@ public class AuthFilter extends OncePerRequestFilter {
             String username = authTokens[0];
             String password = authTokens[1];
 
-            return hasAccess(username, password, request);
+            return hasAccess(username, password, request, response);
         }
         return false;
     }
 
 
-    private boolean hasAccess(String username, String password, BodyHttpServletRequestWrapper request) {
-        if (userService.isUserExist(username, password))
-            return this.handler.handle(username, password, request);
+    private boolean hasAccess(String username, String password, BodyHttpServletRequestWrapper request, HttpServletResponse response) {
+        if (userService.isUserExist(username, password)) {
+            return handle(username, password, request, response);
+        }
         return false;
+    }
+
+    private boolean handle(String username, String password, BodyHttpServletRequestWrapper request, HttpServletResponse response) {
+        try {
+            return this.handler.handle(username, password, request);
+        } catch (Exception e) {
+            sendBadRequestError(response);
+            this.isErrorOccurred = true;
+        }
+        return false;
+    }
+
+    private void sendBadRequestError(HttpServletResponse response) {
+        try {
+            response.sendError(HttpServletResponse.SC_BAD_REQUEST);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

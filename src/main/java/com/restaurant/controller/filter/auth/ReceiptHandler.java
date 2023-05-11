@@ -18,7 +18,7 @@ public class ReceiptHandler extends Handler {
     private final ReceiptService receiptService;
 
     @Override
-    public boolean authoritiesCheck(String username, String password, BodyHttpServletRequestWrapper request) {
+    public boolean authoritiesCheck(String username, String password, BodyHttpServletRequestWrapper request) throws Exception {
         String requestURI = request.getRequestURI();
         if (requestURI.startsWith(RECEIPT_URI)) {
             String method = request.getMethod();

@@ -22,7 +22,7 @@ public class MealHandler extends Handler {
     private final MealService mealService;
 
     @Override
-    public boolean authoritiesCheck(String username, String password, BodyHttpServletRequestWrapper request) {
+    public boolean authoritiesCheck(String username, String password, BodyHttpServletRequestWrapper request) throws Exception {
         String requestURI = request.getRequestURI();
         if (requestURI.startsWith(MEAL_URI)) {
             String method = request.getMethod();

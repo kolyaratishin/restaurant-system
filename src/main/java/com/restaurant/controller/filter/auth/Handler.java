@@ -1,8 +1,6 @@
 package com.restaurant.controller.filter.auth;
 
 import com.restaurant.controller.filter.util.BodyHttpServletRequestWrapper;
-import com.restaurant.model.Restaurant;
-import jakarta.servlet.http.HttpServletRequest;
 
 import java.util.List;
 
@@ -21,14 +19,18 @@ public abstract class Handler {
         return first;
     }
 
-    public boolean handle(String username, String password, BodyHttpServletRequestWrapper request) {
-        if (authoritiesCheck(username, password, request)) {
-            return true;
-        } else if (this.nextHandler == null) {
-            return false;
+    public boolean handle(String username, String password, BodyHttpServletRequestWrapper request) throws Exception{
+        try {
+            if (authoritiesCheck(username, password, request)) {
+                return true;
+            } else if (this.nextHandler == null) {
+                return false;
+            }
+        } catch (Exception e) {
+            throw new RuntimeException(e);
         }
         return this.nextHandler.handle(username, password, request);
     }
 
-    public abstract boolean authoritiesCheck(String username, String password, BodyHttpServletRequestWrapper request);
+    public abstract boolean authoritiesCheck(String username, String password, BodyHttpServletRequestWrapper request) throws Exception;
 }
