@@ -5,6 +5,7 @@ import com.restaurant.controller.request.EmployeeRequest;
 import com.restaurant.controller.response.UserResponse;
 import com.restaurant.model.User;
 import com.restaurant.service.UserService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
@@ -75,7 +76,7 @@ public class LoginController {
     }
 
     @PostMapping("/employee")
-    public ResponseEntity<UserResponse> addEmployee(@RequestBody EmployeeRequest request, @RequestParam(value = "username") String adminUsername) {
+    public ResponseEntity<UserResponse> addEmployee(@Valid @RequestBody EmployeeRequest request, @RequestParam(value = "username") String adminUsername) {
         User user = userService.addEmployee(request, adminUsername);
         UserResponse response = modelMapper.map(user, UserResponse.class);
         response.setRestaurantId(user.getRestaurant().getId());

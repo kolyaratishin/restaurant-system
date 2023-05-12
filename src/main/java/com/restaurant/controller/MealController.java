@@ -7,6 +7,7 @@ import com.restaurant.model.Meal;
 import com.restaurant.model.MealGroup;
 import com.restaurant.service.MealGroupService;
 import com.restaurant.service.MealService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.web.bind.annotation.*;
@@ -23,7 +24,7 @@ public class MealController {
     private final ModelMapper modelMapper;
 
     @PostMapping
-    public MealResponse save(@RequestBody MealRequest mealRequest) {
+    public MealResponse save(@Valid @RequestBody MealRequest mealRequest) {
         MealGroup mealGroupById = mealGroupService.getMealGroupById(mealRequest.getMealGroupId());
         Meal meal = modelMapper.map(mealRequest, Meal.class);
         meal.setMealGroup(mealGroupById);
@@ -39,7 +40,7 @@ public class MealController {
     }
 
     @PutMapping("/{id}")
-    public MealResponse updateMeal(@RequestBody UpdateMealRequest request, @PathVariable(value = "id") Long id) {
+    public MealResponse updateMeal(@Valid @RequestBody UpdateMealRequest request, @PathVariable(value = "id") Long id) {
         Meal meal = mealService.updateMeal(id, request);
         MealResponse mealResponse = modelMapper.map(meal, MealResponse.class);
         mealResponse.setMealGroupId(meal.getMealGroup().getId());

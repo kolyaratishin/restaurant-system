@@ -8,6 +8,7 @@ import com.restaurant.model.Order;
 import com.restaurant.model.Receipt;
 import com.restaurant.service.OrderService;
 import com.restaurant.service.ReceiptService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.web.bind.annotation.*;
@@ -40,7 +41,7 @@ public class ReceiptController {
     }
 
     @PostMapping("/meal")
-    public ReceiptDto addMealToReceipt(@RequestBody ReceiptAddMealRequest request) {
+    public ReceiptDto addMealToReceipt(@Valid @RequestBody ReceiptAddMealRequest request) {
         Receipt receipt = receiptService.addMealToReceipt(request);
         return createReceiptDto(receipt);
     }
