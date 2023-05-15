@@ -3,6 +3,7 @@ package com.restaurant.controller;
 import com.restaurant.controller.dto.UserDto;
 import com.restaurant.controller.request.EmployeeRequest;
 import com.restaurant.controller.response.UserResponse;
+import com.restaurant.exception.RegistrationException;
 import com.restaurant.model.User;
 import com.restaurant.service.UserService;
 import jakarta.validation.Valid;
@@ -30,11 +31,14 @@ public class LoginController {
     private final PasswordEncoder passwordEncoder;
 
     @PostMapping("/registration")
-    public UserResponse registration(@RequestBody UserDto userDto) {
-        User registeredUser = userService.register(userDto);
-        UserResponse response = modelMapper.map(registeredUser, UserResponse.class);
-        response.setRestaurantId(registeredUser.getRestaurant().getId());
-        return response;
+    public ResponseEntity<UserResponse> registration(@RequestBody UserDto userDto) {
+        if (userService.getUserByUsername(userDto.getUsername()).isEmpty()) {
+            User registeredUser = userService.register(userDto);
+            UserResponse response = modelMapper.map(registeredUser, UserResponse.class);
+            response.setRestaurantId(registeredUser.getRestaurant().getId());
+            return ResponseEntity.ok(response);
+        }
+        throw new RegistrationException("Such user with username=" + userDto.getUsername() + " is already exist");
     }
 
     @GetMapping("/login")
@@ -69,10 +73,13 @@ public class LoginController {
 
     @GetMapping
     public ResponseEntity<UserResponse> getUserByUsername(@RequestParam("username") String username) {
-        User user = userService.getUserByUsername(username);
-        UserResponse response = modelMapper.map(user, UserResponse.class);
-        response.setRestaurantId(user.getRestaurant().getId());
-        return ResponseEntity.ok(response);
+        return userService.getUserByUsername(username).
+                map(user -> {
+                    UserResponse response = modelMapper.map(user, UserResponse.class);
+                    response.setRestaurantId(user.getRestaurant().getId());
+                    return ResponseEntity.ok(response);
+                })
+                .orElseThrow();
     }
 
     @PostMapping("/employee")
@@ -91,6 +98,7 @@ public class LoginController {
                         .map(employee -> modelMapper.map(employee, UserResponse.class))
                         .toList());
     }
+
     @DeleteMapping("/{id}")
     public void deleteUser(@PathVariable(value = "id") Long id) {
         userService.deleteById(id);

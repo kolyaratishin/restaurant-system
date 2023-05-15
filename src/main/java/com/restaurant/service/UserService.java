@@ -12,6 +12,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -32,8 +33,8 @@ public class UserService {
         return user;
     }
 
-    public User getUserByUsername(String username) {
-        return userRepository.findByUsername(username).orElseThrow();
+    public Optional<User> getUserByUsername(String username) {
+        return userRepository.findByUsername(username);
     }
 
     public User addEmployee(EmployeeRequest request, String adminUsername) {
@@ -41,7 +42,7 @@ public class UserService {
         employee.setUsername(request.getUsername());
         employee.setPassword(passwordEncoder.encode(request.getPassword()));
         employee.setRole(Role.USER);
-        User adminUser = getUserByUsername(adminUsername);
+        User adminUser = getUserByUsername(adminUsername).orElseThrow();
         employee.setRestaurant(adminUser.getRestaurant());
         userRepository.save(employee);
 
@@ -51,7 +52,7 @@ public class UserService {
     }
 
     public List<User> getAllEmployees(String adminUsername) {
-        return getUserByUsername(adminUsername).getEmployees();
+        return getUserByUsername(adminUsername).orElseThrow().getEmployees();
     }
 
     public User getUserById(Long id) {
@@ -72,7 +73,7 @@ public class UserService {
     }
 
     public boolean isUserExist(String username, String password) {
-        User user = getUserByUsername(username);
+        User user = getUserByUsername(username).orElseThrow();
         return passwordEncoder.matches(password, user.getPassword());
     }
 }
