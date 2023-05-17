@@ -1,6 +1,7 @@
 package com.restaurant.controller;
 
 import com.restaurant.controller.dto.UserDto;
+import com.restaurant.controller.request.AuthRequest;
 import com.restaurant.controller.request.EmployeeRequest;
 import com.restaurant.controller.response.UserResponse;
 import com.restaurant.exception.RegistrationException;
@@ -41,21 +42,10 @@ public class LoginController {
         throw new RegistrationException("Such user with username=" + userDto.getUsername() + " is already exist");
     }
 
-    @GetMapping("/login")
-    public ResponseEntity<?> login(@RequestHeader("Authorization") String authHeader) {
-
-        // Перевірка наявності заголовка Authorization
-        if (authHeader == null || !authHeader.startsWith("Basic ")) {
-            return ResponseEntity.badRequest().body("Invalid Authorization header");
-        }
-
-        // Декодування та розпакування даних авторизації
-        String encodedCredentials = authHeader.substring("Basic ".length()).trim();
-        byte[] decodedCredentials = Base64.getDecoder().decode(encodedCredentials);
-        String credentials = new String(decodedCredentials, StandardCharsets.UTF_8);
-        String[] split = credentials.split(":", 2);
-        String username = split[0];
-        String password = split[1];
+    @PostMapping("/login")
+    public ResponseEntity<?> login(@Valid @RequestBody AuthRequest authRequest) {
+        String username = authRequest.getUsername();
+        String password = authRequest.getPassword();
 
         // Аутентифікація користувача
         UserDetails userDetails = userDetailsService.loadUserByUsername(username);
