@@ -9,6 +9,9 @@ import com.restaurant.service.ReceiptService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 @Component
 @RequiredArgsConstructor
 public class ReceiptHandler extends Handler {
@@ -42,9 +45,13 @@ public class ReceiptHandler extends Handler {
     }
 
     private Long getReceiptIdFromPath(String requestURI) {
-        String[] split = requestURI.split("/");
-        String restUri = split[split.length - 1];
-        return Long.valueOf(restUri.split("/")[0]);
+        Pattern pattern = Pattern.compile("/api/receipt/(count/)?(\\d+)");
+        Matcher matcher = pattern.matcher(requestURI);
+
+        if (matcher.find()) {
+            return Long.valueOf(matcher.group(2));
+        }
+        return 0L;
     }
 
     private ReceiptAddMealRequest getReceiptAddMealRequest(BodyHttpServletRequestWrapper requestWrapper) {
